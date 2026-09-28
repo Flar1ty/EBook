@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>EBook</title>
+    <link rel="icon" th:href="@{/images/favicon.png}" type="image/x-icon">
+    <style>
+        html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        }
+        body {
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+        }
+        .background {
+        //background-color: green;
+        margin-top: 0%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+        }
+        .mainBackPage {
+        padding: 0;
+        width: 96%;
+        //background-color: red;
+        height: 100%;
+        min-height: 100vh;
+        display: flex;
+        box-sizing: border-box;
+        }
+        .titleAndAuth {
+        //background-color: blue;
+        font-family: Arial;
+        //font-size: 120%;
+        display: flex;
+        flex-direction: column;
+        gap: 1vh;
+        width: 100%;
+        }
+        .feed {
+        width: 70%;
+        //background-color: purple;
+        border-right: solid;
+        display: flex;
+        //justify-content: center;
+        }
+        .feed h1 {
+        font-family: Arial Black;
+        font-size: 300%;
+        color: black;
+        padding: 0% 0% 0% 5%;
+        width: 100%;
+        }
+        .language {
+        width: 10%;
+        //background-color: cyan;
+        }
+        .language img {
+        display: inline;
+        width: 40%;
+        border: solid;
+        }
+        .language a {
+        display: inline;
+        gap: 90%;
+        }
+        .select {
+        margin: 10% 10% 0% 20%;
+        }
+        .appName a {
+        display: flex;
+        align-items: center;
+        gap: 10%;
+        margin-left: 10%;
+        text-decoration: none;
+        }
+        .appName img {
+        width: 20%;
+        }
+        .appName h1{
+        font-family: Arial Black;
+        font-size: 5vh;
+        color: black;
+        }
+        .title {
+        width: 20%;
+        //background-color: blue;
+        border-left: solid;
+        border-right: solid;
+        gap: 10%;
+        }
+        .language {
+        width: 10%;
+        //background-color: cyan;
+        }
+        .language img {
+        display: inline;
+        width: 40%;
+        border: solid;
+        }
+        .language a {
+        display: inline;
+        gap: 90%;
+        }
+        .postPart {
+        //padding-left: 5%;
+
+        }
+        .upperPart {
+        padding-left: 5%;
+        border-bottom: solid gray 2px;
+        }
+        .lowerPart {
+        padding-left: 5%;
+        }
+        .postName {
+        font-family: Arial;
+        font-size: 200%;
+        margin: 0%;
+        margin-bottom: 1%;
+        }
+        .tagsLine {
+        display: flex;
+        }
+        .tagsLine p {
+        margin: 0%;
+        margin-bottom: 1%;
+        }
+        .postText {
+        white-space: pre-wrap;
+        margin: 0%;
+        margin-top: 2%;
+        font-size: 150%;
+        }
+        .commentaries {
+        padding-left: 5%;
+        padding-right: 5%;
+        }
+        .commentaryInput textarea {
+        width: 100%;
+        height: 8vh;
+        resize: none;
+        }
+    </style>
+</head>
+<body>
+<div class="background">
+    <div class="mainBackPage">
+        <div class="title">
+            <div class="appName">
+                <a th:href="@{/}">
+                    <img th:src="@{/images/icon.png}" alt="icon.png">
+                    <h1>EBook</h1>
+                </a>
+            </div>
+        </div>
+        <div class="feed">
+            <div class="titleAndAuth">
+                <div>
+                    <h1>Post Creation</h1>
+                </div>
+                <div class="postPart">
+                    <form th:object="${post}" class="creationDiv" style="width:100%">
+                        <div class="upperPart">
+                            <b><p th:text="*{postName}" class="postName">Привет</p></b>
+                            <div class="tagsLine">
+                                <p>Tags: </p>
+                                <div style="display: flex; gap: 0.5vh; flex-direction:inherit;">
+                                    <div th:each="tag : *{postTags}">
+                                        <p th:text="${tag.name}" style="border: solid 1px;">tag Placeholder</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="lowerPart">
+                            <p th:text="*{postText}" class="postText">Post default text</p>
+                        </div>
+                    </form>
+                    <div class="commentaries">
+                        <div sec:authorize="!isAuthenticated()">
+                            <p>Want to leave a comment?
+                                <a th:href="@{/register}"><span>Register</span></a>
+                                or
+                                <a th:href="@{/login}"><span>Log in</span></a>
+                                then!
+                            </p>
+                        </div>
+                        <form method="POST" th:action="@{/post/{uuid}(uuid=${post.id})}" th:object="${commentaryRequest}" sec:authorize="isAuthenticated()">
+                            <div class="commentaryInput">
+                                <input type="hidden" th:value="${post.id}" name="postId">
+                                <textarea th:field="*{commentaryText}"></textarea>
+                            </div>
+                            <button>Leave a comment</button>
+                        </form>
+                        <div th:each="commentary : ${post.commentaries}">
+                            <p th:text="${commentary.commentaryText}"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="language">
+            <div class="select">
+                <a href="nigger.html"><img th:src="@{/images/eng.png}" alt="eng.png"></a>
+                <a href="nigger.html"><img th:src="@{/images/rus.png}" alt="rus.png"></a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

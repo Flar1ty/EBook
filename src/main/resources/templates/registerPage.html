@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>EBook</title>
+    <link rel="icon" th:href="@{/images/favicon.png}" type="image/x-icon">
+    <style>
+        html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        }
+        body {
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+        }
+        .background {
+        //background-color: green;
+        margin-top: 0%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+        }
+        .mainBackPage {
+        padding: 0;
+        width: 96%;
+        //background-color: red;
+        height: 100%;
+        min-height: 100vh;
+        display: flex;
+        box-sizing: border-box;
+        }
+        .titleAndAuth {
+        width: 100%;
+        //background-color: blue;
+        font-family: Arial;
+        font-size: 120%;
+        display: flex;
+        flex-direction: column;
+        gap: 1vh;
+        }
+        .topTitle {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        }
+        .feed {
+        width: 70%;
+        //background-color: purple;
+        border-right: solid;
+        display: flex;
+        justify-content: center;
+        }
+        .feed h1 {
+        font-family: Arial Black;
+        font-size: 300%;
+        color: black;
+        padding: 0% 0% 0% 5%;
+        }
+        .language {
+        width: 10%;
+        //background-color: cyan;
+        }
+        .language img {
+        display: inline;
+        width: 40%;
+        border: solid;
+        }
+        .language a {
+        display: inline;
+        gap: 90%;
+        }
+        .select {
+        margin: 10% 10% 0% 20%;
+        }
+        .appName a {
+        display: flex;
+        align-items: center;
+        gap: 10%;
+        margin-left: 10%;
+        text-decoration: none;
+        }
+        .appName img {
+        width: 20%;
+        }
+        .appName h1{
+        font-family: Arial Black;
+        font-size: 5vh;
+        color: black;
+        }
+        .title {
+        width: 20%;
+        //background-color: blue;
+        border-left: solid;
+        border-right: solid;
+        gap: 10%;
+        }
+        .language {
+        width: 10%;
+        //background-color: cyan;
+        }
+        .language img {
+        display: inline;
+        width: 40%;
+        border: solid;
+        }
+        .language a {
+        display: inline;
+        gap: 90%;
+        }
+        .select {
+        margin: 10% 10% 0% 20%;
+        }
+        .fields {
+        display: flex;
+        flex-direction: column;
+        gap: 30%;
+        }
+        .field {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-family: Arial;
+        font-size: 150%;
+        gap: 5%;
+        }
+        .textField {
+        text-align: right;
+        flex: 1;
+        }
+        .field input {
+        font-family: Arial;
+        font-size: 100%;
+        width: 100%;
+        }
+        .registerButton {
+        font-family: Arial Black;
+        font-size: 140%;
+        margin-top: 10%;
+        }
+    </style>
+</head>
+<body>
+<div class="background">
+    <div class="mainBackPage">
+        <div class="title">
+            <div class="appName">
+                <a th:href="@{/}">
+                    <img th:src="@{/images/icon.png}" alt="icon.png">
+                    <h1>EBook</h1>
+                </a>
+            </div>
+        </div>
+        <div class="feed">
+            <form method="POST" th:object="${registerRequest}" th:action="@{/register}">
+                <div class="titleAndAuth">
+                    <div class="topTitle">
+                        <h1>Register</h1>
+                        <h2>Tell us about yourself!</h2>
+                    </div>
+                    <div class="fields">
+                        <div class="field">
+                            <p class="textField">Name: </p>
+                            <input type="text" th:field="*{username}">
+                        </div>
+                        <div class="field">
+                            <p class="textField">Password: </p>
+                            <input type="password" th:field="*{password}">
+                        </div>
+                        <div class="field">
+                            <p class="textField">Repeat password: </p>
+                            <input type="password" th:field="*{repeatPassword}">
+                        </div>
+                    </div>
+                    <button class="registerButton">Register</button>
+                </div>
+            </form>
+        </div>
+        <div class="language">
+            <div class="select">
+                <a href="nigger.html"><img th:src="@{images/eng.png}" alt="eng.png"></a>
+                <a href="nigger.html"><img th:src="@{images/rus.png}" alt="rus.png"></a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -201,8 +201,12 @@
                             </div>
                             <div class="field">
                                 <p>Tags: </p>
-                                <div style="display: flex; width: 50%; gap: 5%;">
+                                <div style="display: flex; width: 60%; gap: 5%;">
                                     <input class="inputField" id="tagName">
+                                    <div style="display: flex; gap: 10%;">
+                                        <p>Black</p>
+                                        <input type="checkbox" id="isBlack">
+                                    </div>
                                     <button style="min-width: 10vh; width: 20%;" type="button" id="addTagButton">Add tag</button>
                                 </div>
                             </div>
@@ -235,14 +239,18 @@
     const addButton = document.getElementById('addTagButton');
     const tagsField = document.getElementById('tagsPane');
     const createDiv = document.getElementById('tagTemplate');
+    const isBlackField = document.getElementById('isBlack');
     addButton.addEventListener('click', function() {
         const clonnedDiv = createDiv.content.cloneNode(true);
         clonnedDiv.querySelector('#textPlaceholder').textContent = field.value;
-        clonnedDiv.querySelector('#tag').value = field.value;
+        clonnedDiv.querySelector('#tag').value = field.value + ":" + isBlackField.checked;
         clonnedDiv.querySelector('#removeButton').addEventListener('click', function(){
             //alert('remove');
             event.target.closest('div').remove();
         })
+        if(isBlackField.checked){
+            clonnedDiv.querySelector('#textPlaceholder').style.fontWeight = 'bold';
+        }
         tagsField.append(clonnedDiv);
         //alert(field.value);
         field.value = '';

@@ -51,9 +51,10 @@ public class PostCreationController {
         Set<Tag> tags = new HashSet<>();
         for(String tag : createPostRequest.getPostTags()){
             Tag tag1 = new Tag();
-            tag1.setName(tag);
+            int last_index = tag.lastIndexOf(":");
+            tag1.setName(tag.substring(0, last_index));
             tag1.setHex("#000000");
-            tag1.setBlack(false);
+            tag1.setBlack(Boolean.parseBoolean(tag.substring(last_index + 1)));
             tags.add(tag1);
             tagRepository.save(tag1);
         }

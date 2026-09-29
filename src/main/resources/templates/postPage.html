@@ -172,7 +172,7 @@
                                 <p>Tags: </p>
                                 <div style="display: flex; gap: 0.5vh; flex-direction:inherit;">
                                     <div th:each="tag : *{postTags}">
-                                        <p th:text="${tag.name}" style="border: solid 1px;">tag Placeholder</p>
+                                        <p th:text="${tag.name}" th:style="${tag.black} ? 'border: solid 1px; font-weight: bold;' : 'border: solid 1px;'">tag Placeholder</p>
                                     </div>
                                 </div>
                             </div>

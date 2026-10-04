@@ -23,10 +23,14 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+    @Column(name = "description")
+    private String description;
 
     @OneToMany(mappedBy = "user")
     private List<Post> posts;
 
     @OneToMany(mappedBy = "user")
     private List<Commentary> commentaries;
+    @Column(name = "rating")
+    private long rating;
 }

@@ -45,6 +45,7 @@ public class OpenPostController {
         if(user != null && user.isEnabled()){
             model.addAttribute("commentaryRequest", new CommentaryRequest());
             model.addAttribute("userId", userRepository.findByUsername(user.getUsername()).get().getId());
+            model.addAttribute("carma", userRepository.findByUsername(user.getUsername()).get().getRating());
         }
         return "postPage";
     }

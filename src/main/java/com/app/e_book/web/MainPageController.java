@@ -23,6 +23,7 @@ public class MainPageController {
     public String mainPage(Model model, @AuthenticationPrincipal UserDetails user){
         if(user != null && user.isEnabled()){
             model.addAttribute("userId", userRepository.findByUsername(user.getUsername()).get().getId());
+            model.addAttribute("carma", userRepository.findByUsername(user.getUsername()).get().getRating());
         }
         model.addAttribute("posts", postRepository.findAll());
         return "mainPage";

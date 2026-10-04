@@ -166,7 +166,6 @@
         .tags {
             overflow-x: hidden;
             overflow-y: auto;
-            border: solid;
             display: inline-block;
             max-height: 10vh;
         }
@@ -217,7 +216,7 @@
                         <b><a th:href="@{/user/{id}/profile(id=${userId})}">Profile</a></b>
                         <b><a th:href="@{/user/{id}/posts(id=${userId})}">My posts</a></b>
                         <b><a th:href="@{/user/{id}/commentaries(id=${userId})}">Commentaries</a></b>
-                        <b><a th:href="@{/faq(param='carma')}">Carma: 0</a></b>
+                        <b><a th:href="@{/faq(param='carma')}"><span>Carma: </span><span th:text="${carma}">number</span></a></b>
                         <b><a th:href="@{/logout}">Log Out</a></b>       <!--- CHANGE -->
                     </div>
                 </div>

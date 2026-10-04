@@ -34,9 +34,7 @@
         box-sizing: border-box;
         }
         .titleAndAuth {
-        //background-color: blue;
         font-family: Arial;
-        //font-size: 120%;
         display: flex;
         flex-direction: column;
         gap: 1vh;
@@ -132,6 +130,20 @@
         flex-direction: column;
         padding-top: 10%;
         }
+        .profileBody {
+            display: flex;
+            padding-left: 5%;
+        }
+        .userImage {
+            width: 250px;
+            height: 250px;
+            background-image: url('/images/userImage.png');
+            background-position: center;
+            background-size: cover;
+            align-items: end;
+            display: flex;
+            justify-content: end;
+        }
     </style>
 </head>
 <body>
@@ -163,7 +175,17 @@
         <div class="feed">
             <div class="titleAndAuth">
                 <div>
-                    <h1>Post</h1>
+                    <h1><span sec:authentication="name">User</span><span>'s profile</span></h1>
+                </div>
+                <div class="profileBody">
+                    <div class="userImage">
+                        <img src="edit.png" th:src="@{/images/edit.png}">
+                    </div>
+                    <div>
+                        <p th:text="${username}">Username</p>
+                        <p>Registered scince: </p>
+                        <p th:text="${description}">Description</p>
+                    </div>
                 </div>
             </div>
         </div>

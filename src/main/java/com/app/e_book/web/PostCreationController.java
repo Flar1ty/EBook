@@ -36,7 +36,10 @@ public class PostCreationController {
         this.tagRepository = tagRepository;
     }
     @GetMapping
-    public String getPage(Model model){
+    public String getPage(Model model, @AuthenticationPrincipal UserDetails user){
+        if(user != null && user.isEnabled()){
+            model.addAttribute("userId", userRepository.findByUsername(user.getUsername()).get().getId());
+        }
         model.addAttribute("createPostRequest", new CreatePostRequest());
         return "createPost";
     }
@@ -49,20 +52,23 @@ public class PostCreationController {
         post.setPostName(createPostRequest.getPostName());
         post.setPostText(createPostRequest.getPostText());
         Set<Tag> tags = new HashSet<>();
-        for(String tag : createPostRequest.getPostTags()){
-            Tag tag1 = new Tag();
-            int last_index = tag.lastIndexOf(":");
-            tag1.setName(tag.substring(0, last_index));
-            tag1.setHex("#000000");
-            tag1.setBlack(Boolean.parseBoolean(tag.substring(last_index + 1)));
-            tags.add(tag1);
-            tagRepository.save(tag1);
+        if(createPostRequest.getPostTags() != null) {
+            for (String tag : createPostRequest.getPostTags()) {
+                Tag tag1 = new Tag();
+                int last_index = tag.lastIndexOf(":");
+                if(last_index != -1) {
+                    tag1.setName(tag.substring(0, last_index));
+                    tag1.setHex("#00000");
+                    tag1.setBlack(Boolean.parseBoolean(tag.substring(last_index + 1)));
+                    tags.add(tag1);
+                    tagRepository.save(tag1);
+                }
+            }
         }
         post.setPostTags(tags);
         post.setUser(userRepository.findByUsername(user.getUsername()).orElseThrow(() -> new UsernameNotFoundException("Fucking nigger exception")));
         postRepository.save(post);
         log.info("New post was added {}", post);
-        System.out.println(postRepository.findByPostName(post.getPostName()).get().getDate());
         return "redirect:/";
     }
 }

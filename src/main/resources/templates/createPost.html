@@ -170,6 +170,31 @@
             display: inline-block;
             max-height: 10vh;
         }
+        .authorizedUser {
+        border-top: solid;
+        border-bottom: solid;
+        //background-color: red;
+        color: black;
+        min-height: 20vh;
+        width: 100%;
+        display: flex;
+        gap: 1.5vw;
+        }
+        .image {
+        width: 15vh;
+        }
+        .userName {
+        margin: 0%;
+        font-family: Arial;
+        font-size: 150%;
+        }
+        .userButtons {
+        margin-top: 5%;
+        font-family: Arial;
+        display: flex;
+        flex-direction: column;
+        padding-top: 10%;
+        }
     </style>
 </head>
 <body>
@@ -181,6 +206,21 @@
                     <img th:src="@{/images/icon.png}" alt="icon.png">
                     <h1>EBook</h1>
                 </a>
+            </div>
+            <div class="authorizedUser" sec:authorize="isAuthenticated()">
+                <div style="margin-top: 3%; margin-left: 3%">
+                    <img th:src="@{/images/userImage.png}" src="userImage.png" class="image">
+                </div>
+                <div style="margin-top: 3%">
+                    <p class="userName" sec:authentication="name">name</p>
+                    <div class="userButtons" th:object="${#authentication.principal}">
+                        <b><a th:href="@{/user/{id}/profile(id=${userId})}">Profile</a></b>
+                        <b><a th:href="@{/user/{id}/posts(id=${userId})}">My posts</a></b>
+                        <b><a th:href="@{/user/{id}/commentaries(id=${userId})}">Commentaries</a></b>
+                        <b><a th:href="@{/faq(param='carma')}">Carma: 0</a></b>
+                        <b><a th:href="@{/logout}">Log Out</a></b>       <!--- CHANGE -->
+                    </div>
+                </div>
             </div>
         </div>
         <div class="feed">

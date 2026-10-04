@@ -44,6 +44,7 @@ public class OpenPostController {
         model.addAttribute("post", post);
         if(user != null && user.isEnabled()){
             model.addAttribute("commentaryRequest", new CommentaryRequest());
+            model.addAttribute("userId", userRepository.findByUsername(user.getUsername()).get().getId());
         }
         return "postPage";
     }

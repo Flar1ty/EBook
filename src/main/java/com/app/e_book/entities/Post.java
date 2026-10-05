@@ -37,6 +37,8 @@ public class Post {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+    @OneToMany(mappedBy = "post")
+    private List<Vote> votes;
 
     @Column(columnDefinition = "TEXT")
     private String postName;
@@ -51,6 +53,8 @@ public class Post {
 
     @Column(columnDefinition = "TEXT")
     private String postText;
+    @Column(name = "rating")
+    private Long rating;
 
     @OneToMany(mappedBy = "post")
     private List<Commentary> commentaries;

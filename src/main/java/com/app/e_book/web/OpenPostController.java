@@ -3,11 +3,14 @@ package com.app.e_book.web;
 import com.app.e_book.database.CommentaryRepository;
 import com.app.e_book.database.PostRepository;
 import com.app.e_book.database.UserRepository;
+import com.app.e_book.database.VoteRepository;
 import com.app.e_book.entities.Commentary;
 import com.app.e_book.entities.Post;
 import com.app.e_book.entities.User;
+import com.app.e_book.entities.Vote;
 import com.app.e_book.exceptions.PostNotFoundException;
 import com.app.e_book.request.CommentaryRequest;
+import com.app.e_book.request.VoteRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -31,21 +34,34 @@ public class OpenPostController {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final CommentaryRepository commentaryRepository;
+    private final VoteRepository voteRepository;
 
-    public OpenPostController(PostRepository postRepository, UserRepository userRepository, CommentaryRepository commentaryRepository) {
+    public OpenPostController(PostRepository postRepository, UserRepository userRepository, CommentaryRepository commentaryRepository, VoteRepository voteRepository) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.commentaryRepository = commentaryRepository;
+        this.voteRepository = voteRepository;
     }
 
     @GetMapping("/{uuid}")
     public String getPage(@PathVariable("uuid") UUID uuid, Model model, @AuthenticationPrincipal UserDetails user){
         Post post = postRepository.findById(uuid).orElseThrow(() -> new PostNotFoundException("Post with UUID: " + uuid + " doesn't exist"));
         model.addAttribute("post", post);
+        int rating = 0;
+        for(Vote vote : post.getVotes()){
+            if(vote.isUpVote()){
+                rating++;
+            }
+            else {
+                rating--;
+            }
+        }
+        model.addAttribute("rating", rating);
         if(user != null && user.isEnabled()){
             model.addAttribute("commentaryRequest", new CommentaryRequest());
             model.addAttribute("userId", userRepository.findByUsername(user.getUsername()).get().getId());
             model.addAttribute("carma", userRepository.findByUsername(user.getUsername()).get().getRating());
+            model.addAttribute("voteRequest", new VoteRequest());
         }
         return "postPage";
     }
@@ -67,5 +83,37 @@ public class OpenPostController {
             commentaryRepository.save(commentary);
             return "redirect:/post/" + uuid;
         }
+    }
+    @PostMapping("/{uuid}/vote")
+    public String handlePostVote(VoteRequest voteRequest, @AuthenticationPrincipal UserDetails userDetails, @PathVariable("uuid") UUID uuid){
+        if(userDetails != null && userDetails.isEnabled()){
+            User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(() -> new UsernameNotFoundException("No such user found"));
+            Post post = postRepository.findById(uuid).orElseThrow(() -> new PostNotFoundException());
+            boolean flag = true;
+            for(Vote vote : post.getVotes()){
+                if(vote.getUser().equals(user) && voteRequest.isUpVote() == vote.isUpVote()){
+                    flag = false;
+                    break;
+                }
+                else if(vote.getUser().equals(user)){
+                    Vote vote1 = new Vote();
+                    vote1.setUser(user);
+                    vote1.setPost(post);
+                    vote1.setUpVote(voteRequest.isUpVote());
+                    voteRepository.delete(vote);
+                    voteRepository.save(vote1);
+                    flag = false;
+                    break;
+                }
+            }
+            if(flag){
+                Vote vote = new Vote();
+                vote.setUser(user);
+                vote.setPost(post);
+                vote.setUpVote(voteRequest.isUpVote());
+                voteRepository.save(vote);
+            }
+        }
+        return "redirect:/post/" + uuid;
     }
 }

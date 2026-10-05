@@ -171,6 +171,13 @@
         flex-direction: column;
         padding-top: 10%;
         }
+        .ratingDiv {
+            display: flex;
+            align-items: center;
+            justify-content: end;
+            font-family: Arial;
+            font-size: 2.5vh;
+        }
     </style>
 </head>
 <body>
@@ -207,7 +214,7 @@
                 <div class="postPart">
                     <form th:object="${post}" class="creationDiv" style="width:100%">
                         <div class="upperPart">
-                            <b><p th:text="*{postName}" class="postName">Привет</p></b>
+                            <b><p th:text="*{postName}" class="postName">Post name</p></b>
                             <div class="tagsLine">
                                 <p>Tags: </p>
                                 <div style="display: flex; gap: 0.5vh; flex-direction:inherit;">
@@ -221,6 +228,19 @@
                             <p th:text="*{postText}" class="postText">Post default text</p>
                         </div>
                     </form>
+                    <div class="ratingDiv">
+                        <form th:action="@{/post/{id}/vote(id=${post.id})}" sec:authorize="isAuthenticated()" method="post" th:object="${voteRequest}">
+                            <input value="true" type="hidden" name="upVote">
+                            <img src="arrow-up-blank.png" id="upVote">
+                            <button>+</button>
+                        </form>
+                        <b><span id="rating" th:text="${rating}">0</span></b>
+                        <form th:action="@{/post/{id}/vote(id=${post.id})}" sec:authorize="isAuthenticated()" method="post" th:object="${voteRequest}">
+                            <input value="false" type="hidden" name="upVote">
+                            <button>-</button>
+                            <img src="arrow-down-blank.png" id="downVote">
+                        </form>
+                    </div>
                     <div class="commentaries">
                         <div sec:authorize="!isAuthenticated()">
                             <p>Want to leave a comment?
@@ -253,5 +273,38 @@
         </div>
     </div>
 </div>
+<script>
+    var upVote = document.getElementById('upVote');
+    var downVote = document.getElementById('downVote');
+    const rate = document.getElementById('rating');
+    upVote.addEventListener('click', function() {
+        if(upVote.src.match("arrow-up-blank.png")){
+            upVote.src = "arrow-up-green.png";
+            rate.textContent = parseInt(rate.textContent, 10) + 1;
+            if(downVote.src.match("arrow-down-red.png")) {
+                downVote.src = "arrow-down-blank.png";
+                rate.textContent = parseInt(rate.textContent, 10) + 1;
+            }
+        }
+        else {
+            upVote.src = "arrow-up-blank.png";
+            rate.textContent = parseInt(rate.textContent, 10) - 1;
+        }
+    });
+    downVote.addEventListener('click', function() {
+        if(downVote.src.match("arrow-down-blank.png")){
+            downVote.src = "arrow-down-red.png";
+            rate.textContent = parseInt(rate.textContent, 10) - 1;
+            if(upVote.src.match("arrow-up-green.png")){
+                upVote.src = "arrow-up-blank.png";
+                rate.textContent = parseInt(rate.textContent, 10) - 1;
+            }
+        }
+        else {
+            downVote.src = "arrow-down-blank.png";
+            rate.textContent = parseInt(rate.textContent, 10) + 1;
+        }
+    });
+</script>
 </body>
 </html>

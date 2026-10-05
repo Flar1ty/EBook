@@ -28,9 +28,11 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Post> posts;
+    @OneToMany(mappedBy = "user")
+    private List<Vote> votes;
 
     @OneToMany(mappedBy = "user")
     private List<Commentary> commentaries;
     @Column(name = "rating")
-    private long rating;
+    private Long rating;
 }

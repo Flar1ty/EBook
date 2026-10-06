@@ -49,6 +49,7 @@ public class OpenPostController {
         model.addAttribute("post", post);
         int rating = 0;
         for(Vote vote : post.getVotes()){
+            System.out.println(vote);
             if(vote.isUpVote()){
                 rating++;
             }
@@ -89,29 +90,21 @@ public class OpenPostController {
         if(userDetails != null && userDetails.isEnabled()){
             User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(() -> new UsernameNotFoundException("No such user found"));
             Post post = postRepository.findById(uuid).orElseThrow(() -> new PostNotFoundException());
-            boolean flag = true;
-            for(Vote vote : post.getVotes()){
-                if(vote.getUser().equals(user) && voteRequest.isUpVote() == vote.isUpVote()){
-                    flag = false;
-                    break;
-                }
-                else if(vote.getUser().equals(user)){
-                    Vote vote1 = new Vote();
-                    vote1.setUser(user);
-                    vote1.setPost(post);
-                    vote1.setUpVote(voteRequest.isUpVote());
-                    voteRepository.delete(vote);
-                    voteRepository.save(vote1);
-                    flag = false;
-                    break;
-                }
+            //boolean flag = true;
+            Vote vote = voteRepository.findByUserAndPost(user, post).orElse(null);
+            if(vote == null){
+                System.out.println("It's null!");
+                Vote userVote = new Vote();
+                userVote.setUpVote(voteRequest.isUpVote());
+                userVote.setUser(user);
+                userVote.setPost(post);
+                voteRepository.save(userVote);
             }
-            if(flag){
-                Vote vote = new Vote();
-                vote.setUser(user);
-                vote.setPost(post);
-                vote.setUpVote(voteRequest.isUpVote());
-                voteRepository.save(vote);
+            else {
+                System.out.println("It exists!");
+                if(vote.isUpVote() != voteRequest.isUpVote()){
+                    voteRepository.updateVote(vote.getId(), voteRequest.isUpVote());
+                }
             }
         }
         return "redirect:/post/" + uuid;

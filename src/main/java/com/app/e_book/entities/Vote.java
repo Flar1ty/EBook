@@ -9,6 +9,16 @@ import lombok.Setter;
 @Setter
 @Getter
 public class Vote {
+    @Override
+    public String toString() {
+        return "Vote{" +
+                "id=" + id +
+                ", user=" + user +
+                ", post=" + post +
+                ", upVote=" + upVote +
+                '}';
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
